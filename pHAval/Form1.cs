@@ -18,6 +18,9 @@ namespace pHAval
         private Timer time = new Timer();
         string datas = null;
         OpenFileDialog ofd = new OpenFileDialog();
+        List<Dados> lista = new List<Dados>();
+        Dados dados = new Dados();
+
 
         public Form1()
         {
@@ -110,6 +113,8 @@ namespace pHAval
                 //Coletaremos dados do text
                 leitura();
 
+                
+                MessageBox.Show("" + dados.totalIdColeta());
 
                 return true;
             }
@@ -139,24 +144,32 @@ namespace pHAval
             //link para ajudar do projeto:https://pablobatistacardoso.wordpress.com/2012/12/15/ler-aquivo-txt-e-armazenar-em-um-list-c/
 
             string filedata = ofd.FileName;
-            List<string> mensagemLinha = new List<string>();
 
-            //for (int i = 0; i <= LineTxt.Length; i++)
-            //{
-            //    nome += LineTxt[0];
-            //    String[] Line = LineTxt[i].Split(new String[] { "-" }, StringSplitOptions.None);
-            //    MessageBox.Show(Line[0]);
-            //}
+            //Lê todos os dados dentro do arquivo filedata
+            string[] array = File.ReadAllLines(@filedata);
 
-            using (StreamReader texto = new StreamReader(datas))
+            for (int i = 0; i < array.Length; i++)
             {
-                while ((datas = texto.ReadLine()) != null)
-                {
-                    mensagemLinha.Add(datas);
-                }
-            }
+                
+                //Uso o método Split e quebro cada linha
+                //em um novo array auxiliar, ou seja, cada
+                //conteúdo do arquivo txt separado por '|' será
+                //um nova linha neste array auxiliar. Assim sei que
+                //cada índice representa uma propriedade
+                string[] auxiliar = array[i].Split('|');
 
-            MessageBox.Show("Primeira mensagem será :" + mensagemLinha);
+                //Aqui recupero os itens, atribuindo
+                //os mesmo as propriedade da classe
+                //Cliente correspondentes, ou seja,
+                //o índice zero será corresponde ao Id
+                //o um ao nome e o dois ao e-mail
+                dados.somatorioIdColeta(Convert.ToInt32(auxiliar[0]));
+                dados.ValorPH = auxiliar[1];
+                dados.Email = auxiliar[2];
+
+                //Adiciono o objeto a lista
+                lista.Add(dados);
+            }
         }
 
     }

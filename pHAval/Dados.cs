@@ -8,8 +8,20 @@ namespace pHAval
 {
     public class Dados
     {
-        public int nomeDaColeta { get; set; }
+        private int idColeta { get; set; }
         public string ValorPH { get; set; }
         public string Email { get; set; }
+
+
+
+        public void somatorioIdColeta(int valor)
+        {
+            this.idColeta += valor;
+        }
+
+        public int totalIdColeta()
+        {
+            return this.idColeta;
+        }
     }
 }
