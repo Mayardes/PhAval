@@ -28,6 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.abrirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.avaliaçãoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,8 +43,12 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.chtGrafico = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.cbEnable3D = new System.Windows.Forms.CheckBox();
+            this.timerGrafico = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chtGrafico)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -51,7 +59,7 @@
             this.sobreToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(621, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(713, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -105,7 +113,7 @@
             // sobreToolStripMenuItem1
             // 
             this.sobreToolStripMenuItem1.Name = "sobreToolStripMenuItem1";
-            this.sobreToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.sobreToolStripMenuItem1.Size = new System.Drawing.Size(104, 22);
             this.sobreToolStripMenuItem1.Text = "Sobre";
             this.sobreToolStripMenuItem1.Click += new System.EventHandler(this.sobreToolStripMenuItem1_Click);
             // 
@@ -114,9 +122,9 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 324);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 381);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(621, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(713, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -132,11 +140,48 @@
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
             // 
+            // chtGrafico
+            // 
+            chartArea3.Name = "ChartArea1";
+            this.chtGrafico.ChartAreas.Add(chartArea3);
+            this.chtGrafico.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend3.Name = "Legend1";
+            this.chtGrafico.Legends.Add(legend3);
+            this.chtGrafico.Location = new System.Drawing.Point(0, 24);
+            this.chtGrafico.Name = "chtGrafico";
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.chtGrafico.Series.Add(series3);
+            this.chtGrafico.Size = new System.Drawing.Size(713, 357);
+            this.chtGrafico.TabIndex = 2;
+            this.chtGrafico.Text = "chart1";
+            this.chtGrafico.Click += new System.EventHandler(this.chtGrafico_Click);
+            // 
+            // cbEnable3D
+            // 
+            this.cbEnable3D.AutoSize = true;
+            this.cbEnable3D.Location = new System.Drawing.Point(601, 7);
+            this.cbEnable3D.Name = "cbEnable3D";
+            this.cbEnable3D.Size = new System.Drawing.Size(100, 17);
+            this.cbEnable3D.TabIndex = 3;
+            this.cbEnable3D.Text = "Ativar Modo 3D";
+            this.cbEnable3D.UseVisualStyleBackColor = true;
+            this.cbEnable3D.CheckedChanged += new System.EventHandler(this.cbEnable3D_CheckedChanged);
+            // 
+            // timerGrafico
+            // 
+            this.timerGrafico.Enabled = true;
+            this.timerGrafico.Interval = 500;
+            this.timerGrafico.Tick += new System.EventHandler(this.timerGrafico_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(621, 346);
+            this.ClientSize = new System.Drawing.Size(713, 403);
+            this.Controls.Add(this.cbEnable3D);
+            this.Controls.Add(this.chtGrafico);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -147,6 +192,7 @@
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chtGrafico)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -165,6 +211,9 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chtGrafico;
+        private System.Windows.Forms.CheckBox cbEnable3D;
+        private System.Windows.Forms.Timer timerGrafico;
     }
 }
 

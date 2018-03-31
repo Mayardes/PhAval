@@ -21,10 +21,12 @@ namespace pHAval
         List<Dados> lista = new List<Dados>();
         Dados dados = new Dados();
 
-
+        int x = 2000;
         public Form1()
         {
             InitializeComponent();
+            chtGrafico.Visible = false;
+            cbEnable3D.Visible = false;
         }
 
         private void abrirToolStripMenuItem_Click(object sender, EventArgs e)
@@ -105,17 +107,20 @@ namespace pHAval
 
             if (datas != "")
             {
+                chtGrafico.Visible = false;
+                cbEnable3D.Visible = false;
+
                 toolStripProgressBar1.Visible = true;
                 toolStripStatusLabel1.Text = "Analisando..";
                 InitializeMyTimer(1);
                 MessageBox.Show("Analisando " + ofd.SafeFileName, "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                chtGrafico.Visible = true;
+                cbEnable3D.Visible = true;
 
                 //Coletaremos dados do text
                 leitura();
 
-                
-                MessageBox.Show("" + dados.totalIdColeta());
-
+                MessageBox.Show("Foram coletadas: " + dados.retornaUltimaColeta() + " amostas");
                 return true;
             }
             else
@@ -142,6 +147,7 @@ namespace pHAval
         {
 
             //link para ajudar do projeto:https://pablobatistacardoso.wordpress.com/2012/12/15/ler-aquivo-txt-e-armazenar-em-um-list-c/
+            //link para o gráfico fixo final: https://www.youtube.com/watch?v=gqo2TGpCOlA
 
             string filedata = ofd.FileName;
 
@@ -163,14 +169,48 @@ namespace pHAval
                 //Cliente correspondentes, ou seja,
                 //o índice zero será corresponde ao Id
                 //o um ao nome e o dois ao e-mail
-                dados.somatorioIdColeta(Convert.ToInt32(auxiliar[0]));
-                dados.ValorPH = auxiliar[1];
-                dados.Email = auxiliar[2];
+                dados.enviaUltimaColeta(Convert.ToInt32(auxiliar[0]));
+                dados.enviaValorPh(Convert.ToDouble(auxiliar[1]));
 
+                dados.enviaListaIDsColeta(Convert.ToInt32(auxiliar[0]));
+                
                 //Adiciono o objeto a lista
                 lista.Add(dados);
             }
         }
 
+        public void grafico()
+        {
+            //Não exibirá legendas
+            chtGrafico.Legends.Clear();
+
+            chtGrafico.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Range;
+
+
+        }
+
+        private void chtGrafico_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbEnable3D_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbEnable3D.Checked)
+                chtGrafico.ChartAreas[0].Area3DStyle.Enable3D = true;
+            else
+                chtGrafico.ChartAreas[0].Area3DStyle.Enable3D = false;
+        }
+
+        private void timerGrafico_Tick(object sender, EventArgs e)
+        {
+            if(chtGrafico.Series[0].Points.Count > 5)
+            {
+                chtGrafico.Series[0].Points.RemoveAt(0);
+                chtGrafico.Update();
+            }
+
+            chtGrafico.Series[0].Points.AddXY(x++, dados.recebeValorMedioPh());
+        }
     }
 }

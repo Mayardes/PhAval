@@ -16,3 +16,12 @@ C:\Users\Alfaia\Documents\Visual Studio 2015\Projects\PhAval\pHAval\obj\Debug\pH
 C:\Users\Alfaia\Documents\Visual Studio 2015\Projects\PhAval\pHAval\obj\Debug\pHAval.Form1.resources
 C:\Users\Alfaia\Documents\Visual Studio 2015\Projects\PhAval\pHAval\obj\Debug\pHAval.Properties.Resources.resources
 C:\Users\Alfaia\Documents\Visual Studio 2015\Projects\PhAval\pHAval\obj\Debug\pHAval.csproj.GenerateResource.Cache
+C:\Users\Alfaia\Documents\Visual Studio 2015\Projects\PhAval\PhAval\pHAval\bin\Debug\pHAval.exe.config
+C:\Users\Alfaia\Documents\Visual Studio 2015\Projects\PhAval\PhAval\pHAval\obj\Debug\pHAval.exe
+C:\Users\Alfaia\Documents\Visual Studio 2015\Projects\PhAval\PhAval\pHAval\obj\Debug\pHAval.pdb
+C:\Users\Alfaia\Documents\Visual Studio 2015\Projects\PhAval\PhAval\pHAval\bin\Debug\pHAval.exe
+C:\Users\Alfaia\Documents\Visual Studio 2015\Projects\PhAval\PhAval\pHAval\bin\Debug\pHAval.pdb
+C:\Users\Alfaia\Documents\Visual Studio 2015\Projects\PhAval\PhAval\pHAval\obj\Debug\pHAval.csprojResolveAssemblyReference.cache
+C:\Users\Alfaia\Documents\Visual Studio 2015\Projects\PhAval\PhAval\pHAval\obj\Debug\pHAval.Form1.resources
+C:\Users\Alfaia\Documents\Visual Studio 2015\Projects\PhAval\PhAval\pHAval\obj\Debug\pHAval.Properties.Resources.resources
+C:\Users\Alfaia\Documents\Visual Studio 2015\Projects\PhAval\PhAval\pHAval\obj\Debug\pHAval.csproj.GenerateResource.Cache
