@@ -25,9 +25,6 @@ namespace pHAval
         private string horaInicio { get; set; }
         private string horaFim { get; set; }
 
-
-
-
         public void enviaUltimaColeta(int valor)
         {
             this.idUltimaColeta = valor;
@@ -99,6 +96,34 @@ namespace pHAval
         public int recebeNeutra()
         {
             return this.QtsNeutra;
+        }
+
+
+
+        //Metodo que calcula a porcentagem das amostras
+        /**
+         * 0 - Alcalina
+         * 1 - Neutra
+         * 2 - Ácida
+         * */
+        public double retornaPorcentagens(int tipo)
+        {
+            if (tipo == 0)
+            {
+                double porcent = ((this.recebeAlcalina() * 100));
+                return Math.Round(porcent/this.retornaUltimaColeta(), 2);
+            }else
+                if(tipo == 1)
+            {
+                double porcent = ((this.recebeNeutra() * 100));
+                return Math.Round(porcent/ this.retornaUltimaColeta(), 2);
+            }
+            else
+            {
+                double porcent = ((this.recebeAcida() * 100));
+                return Math.Round(porcent / this.retornaUltimaColeta(), 2);
+            }
+
         }
 
 

@@ -28,6 +28,8 @@ namespace pHAval
             InitializeComponent();
             chtGrafico.Visible = false;
             cbEnable3D.Visible = false;
+            chtGraficoPizza.Visible = false;
+
         }
 
         private void abrirToolStripMenuItem_Click(object sender, EventArgs e)
@@ -72,6 +74,7 @@ namespace pHAval
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            desativaLabelsIniciais();
             toolStripStatusLabel1.Text = "Para começar, abra um arquivo!";
             toolStripProgressBar1.Visible = false;
         }
@@ -110,6 +113,7 @@ namespace pHAval
             {
                 chtGrafico.Visible = false;
                 cbEnable3D.Visible = false;
+                chtGraficoPizza.Visible = false;
 
                 toolStripProgressBar1.Visible = true;
                 toolStripStatusLabel1.Text = "Analisando..";
@@ -124,7 +128,8 @@ namespace pHAval
                 MessageBox.Show("Foram coletadas: " + dados.retornaUltimaColeta() + " amostas","Total amostras");
                 MessageBox.Show("Das " + dados.recebeHoraInicio() + " às " + dados.recebeHoraFim(),"Horário");
 
-                impressaoLista();
+
+                //impressaoLista();
 
                 return true;
             }
@@ -145,7 +150,7 @@ namespace pHAval
 
         private void sobreToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("1.0.1", "Versão", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("1.0.2", "Versão", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void leitura()
@@ -158,6 +163,7 @@ namespace pHAval
             //Lê todos os dados dentro do arquivo filedata
             array = File.ReadAllLines(@filedata);
 
+            
            
             for (int i = 0; i < array.Length; i++)
             {
@@ -212,10 +218,9 @@ namespace pHAval
         {
             //Não exibirá legendas
             chtGrafico.Legends.Clear();
-
             chtGrafico.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Range;
-
-
+            chtGrafico.Series[1].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Range;
+            chtGrafico.Series[2].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Range;
         }
 
         private void chtGrafico_Click(object sender, EventArgs e)
@@ -231,14 +236,22 @@ namespace pHAval
                 chtGrafico.ChartAreas[0].Area3DStyle.Enable3D = false;
         }
 
+
+
+        //Dados do gráfico de barras para realização da plotagem 
         private void timerGrafico_Tick(object sender, EventArgs e)
         {
             if(chtGrafico.Series[0].Points.Count > 5)
             {
                 chtGrafico.Series[0].Points.RemoveAt(0);
+                chtGrafico.Series[1].Points.RemoveAt(0);
+                chtGrafico.Series[2].Points.RemoveAt(0);
                 chtGrafico.Update();
             }
-          chtGrafico.Series[0].Points.AddXY(x++, dados.recebeValorMedioPh());
+            
+            chtGrafico.Series[0].Points.AddXY(x++, dados.recebeAlcalina());
+            chtGrafico.Series[1].Points.AddXY(x++, dados.recebeNeutra());
+            chtGrafico.Series[2].Points.AddXY(x++, dados.recebeAcida());
         }
 
 
@@ -261,7 +274,77 @@ namespace pHAval
 
         }
 
+        private void exportarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            desativaLabelsIniciais();
+            chtGrafico.Visible = true;
+            cbEnable3D.Visible = true;
+        }
+
+        private void gráficoDePizzaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            chtGrafico.Visible = false;
+            cbEnable3D.Visible = false;
+            chtGraficoPizza.Visible = true;
+            ativaLabelsIniciais();
+            label3.Text = Convert.ToString(dados.retornaUltimaColeta());
+            label4.Text = dados.recebeHoraInicio();
+            label6.Text = dados.recebeHoraFim();
 
 
+            chtGraficoPizza.Series.Clear();
+            chtGraficoPizza.Legends.Clear();
+
+            //Add a new Legend(if needed) and do some formating
+            chtGraficoPizza.Legends.Add("MyLegend");
+            chtGraficoPizza.Legends[0].Alignment = StringAlignment.Center;
+            chtGraficoPizza.Legends[0].Title = "Tabela";
+            chtGraficoPizza.Legends[0].BorderColor = Color.Black;
+
+            string seriesname = "Pizza";
+            chtGraficoPizza.Series.Add(seriesname);
+
+            chtGraficoPizza.Series[seriesname].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+
+            chtGraficoPizza.Series["Pizza"].Points.AddXY("Alcalina, " + dados.retornaPorcentagens(0) + "%", dados.retornaPorcentagens(0));
+            chtGraficoPizza.Series["Pizza"].Points.AddXY("Neutra, " + dados.retornaPorcentagens(1) + "%", dados.retornaPorcentagens(1));
+            chtGraficoPizza.Series["Pizza"].Points.AddXY("Ácida, " + dados.retornaPorcentagens(2) + "%", dados.retornaPorcentagens(2));
+
+        }
+
+
+        public void desativaLabelsIniciais()
+        {
+            label1.Visible = false;
+            label2.Visible = false;
+            label3.Visible = false;
+            label4.Visible = false;
+            label5.Visible = false;
+            label6.Visible = false;
+            label7.Visible = false;
+            label8.Visible = false;
+            label9.Visible = false;
+            label10.Visible = false;
+            label11.Visible = false;
+        }
+        public void ativaLabelsIniciais()
+        {
+            label1.Visible = true;
+            label2.Visible = true;
+            label3.Visible = true;
+            label4.Visible = true;
+            label5.Visible = true;
+            label6.Visible = true;
+            label7.Visible = true;
+            label8.Visible = true;
+            label9.Visible = true;
+            label10.Visible = true;
+            label11.Visible = true;
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
     }
 }
