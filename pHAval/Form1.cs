@@ -20,6 +20,7 @@ namespace pHAval
         OpenFileDialog ofd = new OpenFileDialog();
         List<Dados> lista = new List<Dados>();
         Dados dados = new Dados();
+        string[] array;
 
         int x = 2000;
         public Form1()
@@ -120,7 +121,11 @@ namespace pHAval
                 //Coletaremos dados do text
                 leitura();
 
-                MessageBox.Show("Foram coletadas: " + dados.retornaUltimaColeta() + " amostas");
+                MessageBox.Show("Foram coletadas: " + dados.retornaUltimaColeta() + " amostas","Total amostras");
+                MessageBox.Show("Das " + dados.recebeHoraInicio() + " às " + dados.recebeHoraFim(),"Horário");
+
+                impressaoLista();
+
                 return true;
             }
             else
@@ -140,7 +145,7 @@ namespace pHAval
 
         private void sobreToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("1.0.0", "Versão", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("1.0.1", "Versão", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void leitura()
@@ -150,10 +155,10 @@ namespace pHAval
             //link para o gráfico fixo final: https://www.youtube.com/watch?v=gqo2TGpCOlA
 
             string filedata = ofd.FileName;
-
             //Lê todos os dados dentro do arquivo filedata
-            string[] array = File.ReadAllLines(@filedata);
+            array = File.ReadAllLines(@filedata);
 
+           
             for (int i = 0; i < array.Length; i++)
             {
                 
@@ -169,12 +174,36 @@ namespace pHAval
                 //Cliente correspondentes, ou seja,
                 //o índice zero será corresponde ao Id
                 //o um ao nome e o dois ao e-mail
+                
                 dados.enviaUltimaColeta(Convert.ToInt32(auxiliar[0]));
                 dados.enviaValorPh(Convert.ToDouble(auxiliar[1]));
+                dados.enviaHoraFim(auxiliar[2]);
+               
 
-                dados.enviaListaIDsColeta(Convert.ToInt32(auxiliar[0]));
-                
-                //Adiciono o objeto a lista
+                //Envia valores para as listas separadamente
+                dados.listaIdColeta.Add(Convert.ToInt32(auxiliar[0]));
+                dados.listaDePhs.Add(Convert.ToDouble(auxiliar[1]));
+                dados.listaDeData.Add(auxiliar[2]);
+                dados.listaDeTemperaturas.Add(Convert.ToInt32(auxiliar[3]));
+
+
+                //Contagem das amostas individualmente
+                if(dados.listaDePhs[i] >= 800)
+                {
+                    dados.enviaAlcalino(1);
+                }else
+                    if(dados.listaDePhs[i] >=700 && dados.listaDePhs[i] < 800)
+                {
+                    dados.enviaNeutra(1);
+                }else
+                    if(dados.listaDePhs[i] < 700)
+                {
+                    dados.enviaAcida(1);
+                }
+
+                //Envia o inicio da hora da coleta
+                dados.enviaHoraInicio(dados.listaDeData[0]);
+
                 lista.Add(dados);
             }
         }
@@ -209,8 +238,30 @@ namespace pHAval
                 chtGrafico.Series[0].Points.RemoveAt(0);
                 chtGrafico.Update();
             }
-
-            chtGrafico.Series[0].Points.AddXY(x++, dados.recebeValorMedioPh());
+          chtGrafico.Series[0].Points.AddXY(x++, dados.recebeValorMedioPh());
         }
+
+
+
+        //Realiza a impressão para referência
+        public void impressaoLista()
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                string[] auxiliar = array[i].Split('|');
+                MessageBox.Show("ID: " + dados.listaIdColeta[i] + " Ph: " + dados.listaDePhs[i] + " Hora: " + dados.listaDeData[i] + " Temp: " + dados.listaDeTemperaturas[i] + "°");
+            }
+
+            MessageBox.Show("Quantidade Alcalinas: " + dados.recebeAlcalina() + " Quantidade Acidas: " + dados.recebeAcida() + " Quantidade Neutras: " + dados.recebeNeutra());
+        }
+
+
+        public void graficoFinal()
+        {
+
+        }
+
+
+
     }
 }

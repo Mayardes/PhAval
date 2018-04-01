@@ -8,15 +8,23 @@ namespace pHAval
 {
     public class Dados
     {
-        private List<int> listaIdColeta = new List<int>();
-        private List<double> listaDePhs = new List<double>();
-        private List<DateTime> listaDeData = new List<DateTime>();
-        private List<int> listaDeTemperaturas = new List<int>();
+        //Lista dados separadamente
+        public List<int> listaIdColeta = new List<int>();
+        public List<double> listaDePhs = new List<double>();
+        public List<string> listaDeData = new List<string>();
+        public List<int> listaDeTemperaturas = new List<int>();
 
+        //Conta a quantidade de amostras separadamente
+        private int QtsAlcalina { get; set; }
+        private int QtsAcida { get; set; }
+        private int QtsNeutra { get; set; }
+
+        //Colta dados para visualização
         private int idUltimaColeta { get; set; }
         private double valorMedioPh { get; set; }
         private string horaInicio { get; set; }
         private string horaFim { get; set; }
+
 
 
 
@@ -42,17 +50,58 @@ namespace pHAval
             return media;
         }
 
-        public void enviaListaIDsColeta(int valor)
+        public void enviaHoraInicio(string hora)
         {
-            this.listaIdColeta.Add(valor);
+            this.horaInicio = hora;
         }
 
-        public List<int> recebeListaDeIDs()
+        public string recebeHoraInicio()
         {
-            return this.listaIdColeta;
+            return this.horaInicio;
+        }
+
+        public void enviaHoraFim(string hora)
+        {
+            this.horaFim = hora;
+        }
+
+        public string recebeHoraFim()
+        {
+            return this.horaFim;
         }
 
 
-        
+
+        public void enviaAlcalino(int cont)
+        {
+            this.QtsAlcalina += cont;
+        }
+
+        public void enviaAcida(int cont)
+        {
+            this.QtsAcida += cont;
+        }
+        public void enviaNeutra(int cont)
+        {
+            this.QtsNeutra += cont;
+        }
+
+
+        public int recebeAlcalina()
+        {
+            return this.QtsAlcalina;
+        }
+
+        public int recebeAcida()
+        {
+            return this.QtsAcida;
+        }
+        public int recebeNeutra()
+        {
+            return this.QtsNeutra;
+        }
+
+
+
     }
 }
