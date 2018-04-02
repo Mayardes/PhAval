@@ -9,6 +9,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using iTextSharp.text;
+
+
+
+//Usando biliotecas para elaboração do PDF
+using iTextSharp;//E A BIBLIOTECA ITEXTSHARP E SUAS EXTENÇÕES
+using iTextSharp.text.pdf;//ESTENSAO 2 (PDF)
+using System.Drawing.Printing;
 
 namespace pHAval
 {
@@ -58,13 +66,29 @@ namespace pHAval
         private void imprimirToolStripMenuItem_Click(object sender, EventArgs e)
         {
            
-            PrintDialog pd = new PrintDialog();
-            if (datas == null || datas == "") 
-                MessageBox.Show("Nenhum arquivo carregado!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); 
-            else 
-            if(DialogResult.OK == pd.ShowDialog(this)){
-                //Aqui deverá selecionar o arquivo a ser impresso!
+            //Abre o arquivo já gerado
+            if (datas == null || datas == "")
+                MessageBox.Show("Nenhum arquivo carregado!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else
+            {
+
+                //Gera o documento em PDF
+                if (GerarRelatorioPDF() == true)
+                {
+
+                    //MessageBox.Show("Gerado com sucesso!\n Deseja abrir agora?", "Informações", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    DialogResult resultado = MessageBox.Show("Sucesso!\nDeseja abrir agora?", "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (resultado.Equals(DialogResult.Yes))
+                    {
+                        ProcessStartInfo startInfo = new ProcessStartInfo("C:\\PDF_TCC\\Doc.pdf");
+                        Process.Start(startInfo);
+                    }
+                }else
+                {
+                    MessageBox.Show("Erro","Aviso", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
+
         }
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
@@ -125,10 +149,8 @@ namespace pHAval
                 //Coletaremos dados do text
                 leitura();
 
-                MessageBox.Show("Foram coletadas: " + dados.retornaUltimaColeta() + " amostas","Total amostras");
-                MessageBox.Show("Das " + dados.recebeHoraInicio() + " às " + dados.recebeHoraFim(),"Horário");
-
-
+                MessageBox.Show("Foram coletadas: " + dados.retornaUltimaColeta() + " amostas","Total amostras");               
+  
                 //impressaoLista();
 
                 return true;
@@ -345,6 +367,99 @@ namespace pHAval
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
+        }
+
+
+        public bool GerarRelatorioPDF()
+        {
+            //Para ajudar na elaboração do relatório
+            //https://www.devmedia.com.br/criando-e-manipulando-arquivos-pdf-com-a-biblioteca-itextsharp-em-c/33392
+            //Utilizaremos a biblioteca ItextSharp 
+
+            
+            Document doc = new Document(PageSize.A4);//criando e estipulando o tipo da folha usada
+            doc.SetMargins(40, 40, 40, 80);//estibulando o espaçamento das margens que queremos
+            doc.AddCreationDate();//adicionando as configuracoes
+
+            //caminho onde sera criado o pdf + nome desejado
+            //OBS: o nome sempre deve ser terminado com .pdf
+            string caminho = @"C:\PDF_TCC\" + "Doc.pdf";
+
+            //criando o arquivo pdf embranco, passando como parametro a variavel                
+            //doc criada acima e a variavel caminho 
+            //tambem criada acima.
+            PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(caminho, FileMode.Create));
+            //Escrevendo no documento PDF
+            doc.Open();
+
+            string t = "";
+
+
+
+            /**
+            * Logo da empresa
+            */
+
+            string imageURL = "C:\\PDF_TCC\\logo.jpg";
+            iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance(imageURL);
+            //Resize image depend upon your need
+            jpg.ScaleToFit(140f, 120f);
+            //Give space before image
+            jpg.SpacingBefore = 1f;
+            //Give some space after the image
+            jpg.SpacingAfter = 1f;
+            jpg.Alignment = Element.ALIGN_CENTER;
+            doc.Add(jpg);
+
+
+            /**
+             * Cabeçalho do relatório
+             * */
+
+            //criando a variavel para paragrafo
+            Paragraph titulo = new Paragraph(t, new iTextSharp.text.Font());
+            //etipulando o alinhamneto
+            titulo.Alignment = Element.ALIGN_CENTER;
+            //adicioando texto
+            titulo.Add("RELATÓRIO DE ANÁLISE DE COLETA");
+            //acidionado paragrafo ao documento
+            doc.Add(titulo);
+
+            /**
+             * Corpo do relatório
+             * */
+            Paragraph texto = new Paragraph(t, new iTextSharp.text.Font());
+            texto.Alignment = Element.ALIGN_LEFT;
+            texto.Add("\n");
+            texto.Add("Quantidade de amostras coletadas: " + dados.retornaUltimaColeta() + "\n");
+            texto.Add("Média de valores do pH: " + dados.recebeValorMedioPh() + "\n");
+            texto.Add("Hora da Coleta: " + dados.recebeHoraInicio() + " até " + dados.recebeHoraFim() + "\n");
+            texto.Add("Variação da temperatura: " + dados.recebeTempInicial() +"°C"+ " - " + dados.recebeTempFinal() + "°C"+"\n");
+            texto.Add("\n");
+            texto.Add("Porcentages:\n");
+            texto.Add("Alcalinidade: " + dados.retornaPorcentagens(0) + "%\n");
+            texto.Add("Neutra: " + dados.retornaPorcentagens(1) + "%\n");
+            texto.Add("Ácida: " + dados.retornaPorcentagens(2) + "%\n");
+            doc.Add(texto);
+
+
+            /**
+             * Rodapé do relatório
+             */
+
+            // para o rodapé é um pouco diferente precisamos criar um PdfContentByte e uma BaseFont e
+            // cria uma instancia da classe PdfContentByte
+            PdfContentByte cb = writer.DirectContent;
+            BaseFont font;
+            font = BaseFont.CreateFont(BaseFont.COURIER_BOLD, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
+            cb.SetFontAndSize(font, 20);
+            string texto2 = "Manaus - AM";
+            cb.ShowTextAligned(Element.ALIGN_RIGHT, texto2, doc.Right, doc.Bottom - 3, 3);
+
+
+            doc.Close();
+
+            return true;
         }
     }
 }

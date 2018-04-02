@@ -24,6 +24,10 @@ namespace pHAval
         private double valorMedioPh { get; set; }
         private string horaInicio { get; set; }
         private string horaFim { get; set; }
+        private int tempInicial { get; set; }
+        private int tempFinal { get; set; }
+
+
 
         public void enviaUltimaColeta(int valor)
         {
@@ -41,10 +45,9 @@ namespace pHAval
 
         public double recebeValorMedioPh()
         {
-            double medio = this.valorMedioPh;
-            int qtsDeColeta = this.idUltimaColeta;
-            double media = (medio/qtsDeColeta);
-            return media;
+            
+            double media = this.valorMedioPh;
+            return Math.Round(media/retornaUltimaColeta(), 1)/100;
         }
 
         public void enviaHoraInicio(string hora)
@@ -98,7 +101,25 @@ namespace pHAval
             return this.QtsNeutra;
         }
 
+        public void enviaTempInicial(int temp)
+        {
+            this.tempInicial = temp;
+        }
 
+        public int recebeTempInicial()
+        {
+            return this.tempInicial;
+        }
+
+        public void enviaTempFinal(int temp)
+        {
+            this.tempFinal = temp;
+        }
+
+        public int recebeTempFinal()
+        {
+            return this.tempInicial;
+        }
 
         //Metodo que calcula a porcentagem das amostras
         /**
@@ -125,6 +146,8 @@ namespace pHAval
             }
 
         }
+
+        
 
 
 
