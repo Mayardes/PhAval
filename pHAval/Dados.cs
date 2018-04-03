@@ -118,7 +118,7 @@ namespace pHAval
 
         public int recebeTempFinal()
         {
-            return this.tempInicial;
+            return this.tempFinal;
         }
 
         //Metodo que calcula a porcentagem das amostras
@@ -145,11 +145,31 @@ namespace pHAval
                 return Math.Round(porcent / this.retornaUltimaColeta(), 2);
             }
 
+
         }
 
-        
+
+        public void zeraTudo()
+        {
+            this.QtsAlcalina = 0;
+            this.QtsNeutra = 0;
+            this.QtsAcida = 0;
+
+            this.idUltimaColeta =0;
+            this.valorMedioPh = 0;
+            this.horaInicio = "";
+            this.horaFim = "";
+            this.tempInicial = 0;
+            this.tempFinal = 0;
+
+            this.listaDeTemperaturas.Clear();
+            this.listaIdColeta.Clear();
+            this.listaDePhs.Clear();
+            this.listaDeData.Clear();
 
 
+
+        }
 
     }
 }

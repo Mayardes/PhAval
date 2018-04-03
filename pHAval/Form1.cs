@@ -55,6 +55,9 @@ namespace pHAval
             if (DialogResult.OK == ofd.ShowDialog(this))
             {
 
+               desativaLabelsIniciais();
+               dados.zeraTudo();
+
                 if (analiseDosDadosColetados() == true)
                 {
                     toolStripStatusLabel1.Text = "Analisado: " + ofd.FileName;
@@ -148,10 +151,9 @@ namespace pHAval
 
                 //Coletaremos dados do text
                 leitura();
+                analisaMenoreMaiorTemp();
 
-                MessageBox.Show("Foram coletadas: " + dados.retornaUltimaColeta() + " amostas","Total amostras");               
-  
-                //impressaoLista();
+                MessageBox.Show("Foram coletadas: " + dados.retornaUltimaColeta() + " amostas","Total amostras");
 
                 return true;
             }
@@ -172,7 +174,7 @@ namespace pHAval
 
         private void sobreToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("1.0.2", "Versão", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("1.0.3", "Versão", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void leitura()
@@ -216,7 +218,7 @@ namespace pHAval
 
 
                 //Contagem das amostas individualmente
-                if(dados.listaDePhs[i] >= 800)
+                if (dados.listaDePhs[i] >= 800)
                 {
                     dados.enviaAlcalino(1);
                 }else
@@ -274,20 +276,17 @@ namespace pHAval
             chtGrafico.Series[0].Points.AddXY(x++, dados.recebeAlcalina());
             chtGrafico.Series[1].Points.AddXY(x++, dados.recebeNeutra());
             chtGrafico.Series[2].Points.AddXY(x++, dados.recebeAcida());
+           
         }
 
 
 
         //Realiza a impressão para referência
-        public void impressaoLista()
+        public void analisaMenoreMaiorTemp()
         {
-            for (int i = 0; i < array.Length; i++)
-            {
-                string[] auxiliar = array[i].Split('|');
-                MessageBox.Show("ID: " + dados.listaIdColeta[i] + " Ph: " + dados.listaDePhs[i] + " Hora: " + dados.listaDeData[i] + " Temp: " + dados.listaDeTemperaturas[i] + "°");
-            }
-
-            MessageBox.Show("Quantidade Alcalinas: " + dados.recebeAlcalina() + " Quantidade Acidas: " + dados.recebeAcida() + " Quantidade Neutras: " + dados.recebeNeutra());
+            dados.listaDeTemperaturas.Sort();
+            dados.enviaTempInicial(dados.listaDeTemperaturas[0]);
+            dados.enviaTempFinal(dados.listaDeTemperaturas[(dados.retornaUltimaColeta() - 1)]);
         }
 
 
@@ -312,6 +311,9 @@ namespace pHAval
             label3.Text = Convert.ToString(dados.retornaUltimaColeta());
             label4.Text = dados.recebeHoraInicio();
             label6.Text = dados.recebeHoraFim();
+            label8.Text = Convert.ToString(dados.recebeTempInicial());
+            label10.Text = Convert.ToString(dados.recebeTempFinal());
+
 
 
             chtGraficoPizza.Series.Clear();
@@ -376,7 +378,7 @@ namespace pHAval
             //https://www.devmedia.com.br/criando-e-manipulando-arquivos-pdf-com-a-biblioteca-itextsharp-em-c/33392
             //Utilizaremos a biblioteca ItextSharp 
 
-            
+
             Document doc = new Document(PageSize.A4);//criando e estipulando o tipo da folha usada
             doc.SetMargins(40, 40, 40, 80);//estibulando o espaçamento das margens que queremos
             doc.AddCreationDate();//adicionando as configuracoes
@@ -428,18 +430,28 @@ namespace pHAval
             /**
              * Corpo do relatório
              * */
+            DateTime localDate = DateTime.Now;
+
             Paragraph texto = new Paragraph(t, new iTextSharp.text.Font());
             texto.Alignment = Element.ALIGN_LEFT;
             texto.Add("\n");
-            texto.Add("Quantidade de amostras coletadas: " + dados.retornaUltimaColeta() + "\n");
+            texto.Add("Emissão: " + localDate + "\n");
+            texto.Add("Arquivo: " + ofd.SafeFileName);
+            texto.Add("\n");
+            texto.Add("\nQuantidade de amostras coletadas: " + dados.retornaUltimaColeta() + "\n");
             texto.Add("Média de valores do pH: " + dados.recebeValorMedioPh() + "\n");
             texto.Add("Hora da Coleta: " + dados.recebeHoraInicio() + " até " + dados.recebeHoraFim() + "\n");
             texto.Add("Variação da temperatura: " + dados.recebeTempInicial() +"°C"+ " - " + dados.recebeTempFinal() + "°C"+"\n");
             texto.Add("\n");
-            texto.Add("Porcentages:\n");
+            texto.Add("Porcentagens:\n");
             texto.Add("Alcalinidade: " + dados.retornaPorcentagens(0) + "%\n");
             texto.Add("Neutra: " + dados.retornaPorcentagens(1) + "%\n");
             texto.Add("Ácida: " + dados.retornaPorcentagens(2) + "%\n");
+            texto.Add("\n");
+            texto.Add("Quantidade de amostras individuais:\n");
+            texto.Add("Alcalinidade: " + dados.recebeAlcalina() + "\n");
+            texto.Add("Neutra: " + dados.recebeNeutra() + "\n");
+            texto.Add("Ácida: " + dados.recebeAcida() + "\n");
             doc.Add(texto);
 
 
@@ -447,16 +459,22 @@ namespace pHAval
              * Rodapé do relatório
              */
 
-            // para o rodapé é um pouco diferente precisamos criar um PdfContentByte e uma BaseFont e
-            // cria uma instancia da classe PdfContentByte
-            PdfContentByte cb = writer.DirectContent;
-            BaseFont font;
-            font = BaseFont.CreateFont(BaseFont.COURIER_BOLD, BaseFont.WINANSI, BaseFont.NOT_EMBEDDED);
-            cb.SetFontAndSize(font, 20);
-            string texto2 = "Manaus - AM";
-            cb.ShowTextAligned(Element.ALIGN_RIGHT, texto2, doc.Right, doc.Bottom - 3, 3);
+            Paragraph footer = new Paragraph("Manaus - AM", new iTextSharp.text.Font());
+            footer.Alignment = Element.ALIGN_CENTER;
 
-
+            PdfPTable footerTbl = new PdfPTable(1);
+            footerTbl.WidthPercentage = 100f;
+            footerTbl.TotalWidth = 1000f;
+            footerTbl.HorizontalAlignment = 0;
+            PdfPCell cell = new PdfPCell(footer);
+            cell.Border = 0;
+            cell.Colspan = 1;
+            cell.PaddingLeft = 0;
+            cell.HorizontalAlignment = 0;
+            footerTbl.DefaultCell.HorizontalAlignment = 0;
+            footerTbl.WidthPercentage = 10;
+            footerTbl.AddCell(cell);                                     
+            footerTbl.WriteSelectedRows(0, -10, 270, 30, writer.DirectContent);
             doc.Close();
 
             return true;
