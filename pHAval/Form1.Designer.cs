@@ -65,10 +65,12 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chtGrafico)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chtGraficoPizza)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -201,9 +203,9 @@
             // 
             this.cbEnable3D.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.cbEnable3D.Location = new System.Drawing.Point(664, 7);
+            this.cbEnable3D.Location = new System.Drawing.Point(656, 0);
             this.cbEnable3D.Name = "cbEnable3D";
-            this.cbEnable3D.Size = new System.Drawing.Size(100, 17);
+            this.cbEnable3D.Size = new System.Drawing.Size(108, 24);
             this.cbEnable3D.TabIndex = 3;
             this.cbEnable3D.Text = "Ativar Modo 3D";
             this.cbEnable3D.UseVisualStyleBackColor = true;
@@ -343,11 +345,21 @@
             this.label11.TabIndex = 16;
             this.label11.Text = "°C";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::pHAval.Properties.Resources.home;
+            this.pictureBox1.Location = new System.Drawing.Point(2, 24);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(774, 413);
+            this.pictureBox1.TabIndex = 17;
+            this.pictureBox1.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(776, 462);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
@@ -375,6 +387,7 @@
             this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chtGrafico)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chtGraficoPizza)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -409,6 +422,7 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

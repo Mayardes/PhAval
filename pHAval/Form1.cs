@@ -57,6 +57,8 @@ namespace pHAval
 
                desativaLabelsIniciais();
                dados.zeraTudo();
+               pictureBox1.Visible = false;
+               MaximizeBox = true;
 
                 if (analiseDosDadosColetados() == true)
                 {
@@ -101,6 +103,8 @@ namespace pHAval
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
             desativaLabelsIniciais();
             toolStripStatusLabel1.Text = "Para começar, abra um arquivo!";
             toolStripProgressBar1.Visible = false;
