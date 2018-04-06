@@ -71,7 +71,7 @@ namespace pHAval
            
             //Abre o arquivo já gerado
             if (datas == null || datas == "")
-                MessageBox.Show("Nenhum arquivo carregado!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Nenhum arquivo carregado!", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
             {
 
@@ -272,10 +272,11 @@ namespace pHAval
                 chtGrafico.Series[2].Points.RemoveAt(0);
                 chtGrafico.Update();
             }
-            
-            chtGrafico.Series[0].Points.AddXY(x++, dados.recebeAlcalina());
-            chtGrafico.Series[1].Points.AddXY(x++, dados.recebeNeutra());
-            chtGrafico.Series[2].Points.AddXY(x++, dados.recebeAcida());
+
+            //chtGrafico.Series[2].Points.AddXY(x++, dados.recebeAcida());
+            chtGrafico.Series[0].Points.AddXY(0, dados.recebeAlcalina());
+            chtGrafico.Series[1].Points.AddXY(0, dados.recebeNeutra());
+            chtGrafico.Series[2].Points.AddXY(0, dados.recebeAcida());
            
         }
 
@@ -313,9 +314,6 @@ namespace pHAval
             label6.Text = dados.recebeHoraFim();
             label8.Text = Convert.ToString(dados.recebeTempInicial());
             label10.Text = Convert.ToString(dados.recebeTempFinal());
-
-
-
             chtGraficoPizza.Series.Clear();
             chtGraficoPizza.Legends.Clear();
 
@@ -378,7 +376,6 @@ namespace pHAval
             //https://www.devmedia.com.br/criando-e-manipulando-arquivos-pdf-com-a-biblioteca-itextsharp-em-c/33392
             //Utilizaremos a biblioteca ItextSharp 
 
-
             Document doc = new Document(PageSize.A4);//criando e estipulando o tipo da folha usada
             doc.SetMargins(40, 40, 40, 80);//estibulando o espaçamento das margens que queremos
             doc.AddCreationDate();//adicionando as configuracoes
@@ -396,8 +393,6 @@ namespace pHAval
 
             string t = "";
 
-
-
             /**
             * Logo da empresa
             */
@@ -412,7 +407,6 @@ namespace pHAval
             jpg.SpacingAfter = 1f;
             jpg.Alignment = Element.ALIGN_CENTER;
             doc.Add(jpg);
-
 
             /**
              * Cabeçalho do relatório
@@ -431,7 +425,6 @@ namespace pHAval
              * Corpo do relatório
              * */
             DateTime localDate = DateTime.Now;
-
             Paragraph texto = new Paragraph(t, new iTextSharp.text.Font());
             texto.Alignment = Element.ALIGN_LEFT;
             texto.Add("\n");
@@ -453,6 +446,20 @@ namespace pHAval
             texto.Add("Neutra: " + dados.recebeNeutra() + "\n");
             texto.Add("Ácida: " + dados.recebeAcida() + "\n");
             doc.Add(texto);
+
+
+            //Mostra o gráfico no relatório
+
+            //var chartimage = new MemoryStream();
+            //chtGraficoPizza.SaveImage(chartimage, System.Windows.Forms.DataVisualization.Charting.ChartImageFormat.Png);
+            //iTextSharp.text.Image Chart_image = iTextSharp.text.Image.GetInstance(chartimage.GetBuffer());
+            //Chart_image.ScaleToFit(460f, 420);
+            ////Give space before image
+            //Chart_image.SpacingBefore = 1f;
+            ////Give some space after the image
+            //Chart_image.SpacingAfter = 1f;
+            //Chart_image.Alignment = Element.ALIGN_CENTER;
+            //doc.Add(Chart_image);
 
 
             /**
