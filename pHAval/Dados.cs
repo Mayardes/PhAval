@@ -28,7 +28,6 @@ namespace pHAval
         private int tempFinal { get; set; }
 
 
-
         public void enviaUltimaColeta(int valor)
         {
             this.idUltimaColeta = valor;

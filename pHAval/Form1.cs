@@ -278,10 +278,10 @@ namespace pHAval
             }
 
             //chtGrafico.Series[2].Points.AddXY(x++, dados.recebeAcida());
-            chtGrafico.Series[0].Points.AddXY(0, dados.recebeAlcalina());
-            chtGrafico.Series[1].Points.AddXY(0, dados.recebeNeutra());
-            chtGrafico.Series[2].Points.AddXY(0, dados.recebeAcida());
-           
+              chtGrafico.Series[0].Points.AddXY(0, dados.recebeAlcalina());
+              chtGrafico.Series[1].Points.AddXY(0, dados.recebeNeutra());
+              chtGrafico.Series[2].Points.AddXY(0, dados.recebeAcida());
+  
         }
 
 
@@ -320,6 +320,7 @@ namespace pHAval
             label10.Text = Convert.ToString(dados.recebeTempFinal());
             chtGraficoPizza.Series.Clear();
             chtGraficoPizza.Legends.Clear();
+
 
             //Add a new Legend(if needed) and do some formating
             chtGraficoPizza.Legends.Add("MyLegend");
