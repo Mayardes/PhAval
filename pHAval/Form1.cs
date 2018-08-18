@@ -242,6 +242,8 @@ namespace pHAval
             }
         }
 
+        //teste de aplicação
+
         public void grafico()
         {
             //Não exibirá legendas
